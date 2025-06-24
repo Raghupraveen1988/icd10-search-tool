@@ -1,0 +1,42 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ICD-10-CM Search Tool</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 2rem; background-color: #f9f9f9; }
+    input, button { padding: 10px; font-size: 16px; margin: 5px 0; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; background: #fff; }
+    th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
+    th { background-color: #f0f0f0; }
+  </style>
+</head>
+<body>
+  <h1>🔍 ICD-10-CM Code Search</h1>
+  <input type="text" id="keyword" placeholder="Search by condition or code..." />
+  <button onclick="searchCodes()">Search</button>
+  <table id="results"></table>
+
+  <script>
+    let codes = [];
+
+    fetch('codes.json')
+      .then(res => res.json())
+      .then(data => codes = data);
+
+    function searchCodes() {
+      const query = document.getElementById('keyword').value.toLowerCase();
+      const filtered = codes.filter(code =>
+        code.code.toLowerCase().includes(query) ||
+        code.description.toLowerCase().includes(query)
+      );
+      const table = document.getElementById('results');
+      table.innerHTML = "<tr><th>Code</th><th>Description</th></tr>";
+      filtered.forEach(item => {
+        table.innerHTML += `<tr><td>${item.code}</td><td>${item.description}</td></tr>`;
+      });
+    }
+  </script>
+</body>
+</html>
